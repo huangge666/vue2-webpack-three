@@ -177,6 +177,8 @@ export default {
         requestAnimationFrame(animate);
 
         controls && controls.update();
+
+        // 需要更新 TWEEN 才能出现效果
         TWEEN && TWEEN.update();
 
         renderer.render(scene, camera);
