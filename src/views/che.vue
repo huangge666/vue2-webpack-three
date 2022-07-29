@@ -26,6 +26,7 @@
 <script>
 import {
   Color,
+  AmbientLight,
   DirectionalLight,
   DirectionalLightHelper,
   HemisphereLight,
@@ -33,6 +34,7 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
+  sRGBEncoding,
   GridHelper,
   MeshPhongMaterial,
   PlaneGeometry,
@@ -98,10 +100,14 @@ export default {
     },
     // 创建灯光
     setLight() {
-      const directionalLight = new DirectionalLight(0xffffff, 0.5);
+      const ambientLight = new AmbientLight(0xffffff, 1);
+      this.scene.add(ambientLight);
+
+      const directionalLight = new DirectionalLight(0xffffff, 1);
       directionalLight.position.set(-4, 8, 4);
       this.dHelper = new DirectionalLightHelper(directionalLight, 5, 0xff0000);
-      const hemisphereLight = new HemisphereLight(0xffffff, 0xffffff, 0.4);
+
+      const hemisphereLight = new HemisphereLight(0xffffff, 0xffffff, 1);
       hemisphereLight.position.set(0, 8, 0);
       this.hHelper = new HemisphereLightHelper(hemisphereLight, 5);
 
@@ -116,6 +122,7 @@ export default {
       const renderer = new WebGLRenderer();
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setClearColor(0xffffff, 1);
+      renderer.outputEncoding = sRGBEncoding;
       this.renderer = renderer;
       document.querySelector(".boxs").appendChild(renderer.domElement);
     },
@@ -194,6 +201,17 @@ export default {
             // ... 可以在此进行一些操作
             // fbx.scale.set(1, 1, 1);
             // fbx.position.set(0, 0, 0);
+            console.log(fbx);
+            // fbx.traverse(function (child) {
+            //   if (child.isMesh) {
+            //     child.frustumCulled = false;
+            //     //模型阴影
+            //     child.castShadow = true;
+            //     //模型自发光
+            //     child.material.emissive = child.material.color;
+            //     child.material.emissiveMap = child.material.map;
+            //   }
+            // });
             resolve(fbx);
           },
           ({ loaded, total }) => {
@@ -204,7 +222,7 @@ export default {
                 this.isLoading = false;
               }, 1000);
             }
-            console.log((loaded / total) * 100 + "% loaded");
+            // console.log((loaded / total) * 100 + "% loaded");
           },
           (err) => {
             reject(err);

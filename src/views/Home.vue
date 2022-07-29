@@ -8,6 +8,8 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import Animations from "@/assets/utils/animations";
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 
 export default {
   name: "Home",
@@ -29,37 +31,57 @@ export default {
         0.1,
         1000
       );
-      camera.position.z = 10;
+      // camera.position.z = 10;
+      camera.position.set(0, 1, 10);
 
       const gltfLoader = new GLTFLoader();
-      gltfLoader.load("/gltf/scene.gltf", (gltf) => {
-        var model = gltf.scene;
+      gltfLoader.load(
+        "/gltf/scene.gltf",
+        (gltf) => {
+          var model = gltf.scene;
 
-        //添加这段代码
-        //遍历模型每部分
-        model.traverse((o) => {
-          //将图片作为纹理加载
-          let explosionTexture = new THREE.TextureLoader().load(
-            "/gltf/scene.png"
-          );
-          //调整纹理图的方向
-          explosionTexture.flipY = false;
-          //将纹理图生成基础网格材质(MeshBasicMaterial)
-          const material = new THREE.MeshBasicMaterial({
-            map: explosionTexture,
+          //添加这段代码
+          //遍历模型每部分
+          model.traverse((o) => {
+            //将图片作为纹理加载
+            let explosionTexture = new THREE.TextureLoader().load(
+              "/gltf/scene.png"
+            );
+            //调整纹理图的方向
+            explosionTexture.flipY = false;
+            //将纹理图生成基础网格材质(MeshBasicMaterial)
+            const material = new THREE.MeshBasicMaterial({
+              map: explosionTexture,
+            });
+            //给模型每部分上材质
+            o.material = material;
+
+            //加这句，让模型等每个部分都能产生阴影
+            if (o.isMesh) {
+              o.castShadow = true;
+              o.receiveShadow = true;
+            }
           });
-          //给模型每部分上材质
-          o.material = material;
-
-          //加这句，让模型等每个部分都能产生阴影
-          if (o.isMesh) {
-            o.castShadow = true;
-            o.receiveShadow = true;
+          model.rotateY(0.005);
+          scene.add(model);
+        },
+        ({ loaded, total }) => {
+          if (Math.floor((loaded / total) * 100) === 100) {
+            Animations.animateCamera(
+              camera,
+              controls,
+              { x: 0, y: 40, z: 0 },
+              { x: 0, y: 0, z: 0 },
+              4000,
+              () => {
+                console.log("进入了吗？");
+              }
+            );
+          } else {
+            console.log(total, "total");
           }
-        });
-        model.rotateY(0.005);
-        scene.add(model);
-      });
+        }
+      );
 
       // 添加光影
       // let floorGeometry = new THREE.PlaneGeometry(3000, 3000);
@@ -97,19 +119,67 @@ export default {
         return needResize;
       }
 
+      const poiObjects = [];
+      const pointTexture = new THREE.TextureLoader().load(
+        require("../assets/images/yuan.png")
+      );
+      const group = new THREE.Group();
+      const materialC = new THREE.SpriteMaterial({
+        map: pointTexture,
+        color: 0xffffff,
+        fog: false,
+      });
+      const sprite = new THREE.Sprite(materialC);
+      sprite.scale.set(0.15, 0.15, 1);
+      sprite.position.set(0.5, 0.5, 0);
+      sprite.idstr = "popup_ces";
+
+      group.add(sprite);
+      poiObjects.push(sprite);
+
+      scene.add(group);
+
+      document.body.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersects = raycaster.intersectObjects(poiObjects);
+        console.log(intersects);
+        if (intersects.length > 0) {
+          var popIndex = intersects[0].object.idstr;
+          console.log(popIndex, "popIndex");
+          Animations.animateCamera(
+            camera,
+            controls,
+            { x: 0, y: 10, z: 5 },
+            { x: 0, y: 0, z: 0 },
+            1600,
+            () => {}
+          );
+        }
+      });
+
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       function animate() {
-        controls.update();
-        renderer.render(scene, camera);
-        requestAnimationFrame(animate);
-
         //添加下面代码
         if (resizeRendererToDisplaySize(renderer)) {
           const canvas = renderer.domElement;
           camera.aspect = canvas.clientWidth / canvas.clientHeight;
           camera.updateProjectionMatrix();
         }
+        requestAnimationFrame(animate);
+
+        controls && controls.update();
+        TWEEN && TWEEN.update();
+
+        renderer.render(scene, camera);
       }
       animate();
     },
