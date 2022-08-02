@@ -157,7 +157,7 @@ export default {
           Animations.animateCamera(
             camera,
             controls,
-            { x: 0, y: 10, z: 5 },
+            { x: 2, y: .5, z: 2 },
             { x: 0, y: 0, z: 0 },
             1600,
             () => {}

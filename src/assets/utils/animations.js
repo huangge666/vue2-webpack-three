@@ -3,7 +3,6 @@ import { TWEEN } from "three/examples/jsm/libs/tween.module.min.js";
 const Animations = {
   //相机移动实现漫游等动画
   animateCamera: (camera, controls, newP, newT, time = 2000, callBack) => {
-    console.log("animateCamera")
     var tween = new TWEEN.Tween({
       x1: camera.position.x, // 相机x
       y1: camera.position.y, // 相机y
@@ -23,7 +22,6 @@ const Animations = {
       time
     );
     tween.onUpdate(function (object) {
-      console.log("tween.onUpdate");
       camera.position.x = object.x1;
       camera.position.y = object.y1;
       camera.position.z = object.z1;
@@ -33,12 +31,10 @@ const Animations = {
       controls.update();
     });
     tween.onComplete(function () {
-      console.log("tween.onComplete");
       controls.enabled = true;
       callBack();
     });
 
-    console.warn(tween, "tween");
     tween.easing(TWEEN.Easing.Cubic.InOut);
     tween.start();
   },
