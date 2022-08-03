@@ -15,9 +15,7 @@ export default {
   },
   data() {
     return {
-      // sceneUrl: "static/fbx/cs/startup.hdr",
       sceneUrl: "static/bg.jpg",
-      // modelUrl: "static/fbx/cs/机械测试.fbx",
       modelUrl: "static/fbx/02.fbx",
     };
   },

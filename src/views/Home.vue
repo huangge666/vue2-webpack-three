@@ -45,7 +45,7 @@ export default {
           model.traverse((o) => {
             //将图片作为纹理加载
             let explosionTexture = new THREE.TextureLoader().load(
-              "/gltf/scene.png"
+              "./gltf/scene.png"
             );
             //调整纹理图的方向
             explosionTexture.flipY = false;
