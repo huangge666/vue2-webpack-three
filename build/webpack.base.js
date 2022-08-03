@@ -27,6 +27,7 @@ module.exports = {
       filename: "index.html",
       // js文放入body里
       inject: "body",
+      title: "THREE.js Demo"
     }),
     new MiniCssExtractPlugin({
       filename: "static/styles/chunk-[contenthash].css",

@@ -3,10 +3,11 @@ const base = require("./webpack.base");
 const webpack = require("webpack");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+// const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CompressionPlugin = require("compression-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-// const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const path = require("path");
 
 module.exports = merge(base, {
   mode: "production",
@@ -21,7 +22,7 @@ module.exports = merge(base, {
         },
       },
     }),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     // gzip
     new CompressionPlugin({
       algorithm: "gzip",
@@ -30,17 +31,15 @@ module.exports = merge(base, {
     }),
     // 构建命令行日志
     new FriendlyErrorsWebpackPlugin(),
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     {
-    //       from: path.resolve(__dirname, "../public/static"),
-    //       to: "static",
-    //       globOptions: {
-    //         ignore: [".*"],
-    //       },
-    //     },
-    //   ],
-    // }),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, "../public/static"),
+        to: "static",
+        globOptions: {
+          ignore: [".*"],
+        },
+      }
+    ]),
   ],
   stats: "errors-only",
   optimization: {
