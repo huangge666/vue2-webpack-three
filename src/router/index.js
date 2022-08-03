@@ -37,7 +37,7 @@ function importAll(r) {
   });
 }
 
-importAll(require.context("../views/", false, /\.vue$/, "lazy")); // 第二个参数指是否使用子目录 第四个参数是指是否异步 lazy/sync
+importAll(require.context("../views/", true, /\.vue$/, "lazy")); // 第二个参数指是否使用子目录 第四个参数是指是否异步 lazy/sync
 const routes = [...siteRoutes];
 
 const router = new VueRouter({

@@ -3,10 +3,13 @@
     <div class="boxs">
       <div class="maskLoading"
            v-if="isLoading">
-        <div class="loading">
+        <!-- <div class="loading">
           <div :style="{width : loadingWidth +'%' }"></div>
         </div>
-        <div style="padding-left: 10px;">{{parseInt(loadingWidth)}}%</div>
+        <div style="padding-left: 10px;">{{parseInt(loadingWidth)}}%</div> -->
+        <div class="loading">
+          <div id="progressbar"></div>
+        </div>
       </div>
       <div class="mask">
         <p>x : {{map.x}} y:{{map.y}} z :{{map.z}}</p>
@@ -121,7 +124,7 @@ export default {
       this.scene = new Scene();
       const renderer = new WebGLRenderer();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0xffffff, 1);
+      renderer.setClearColor(0xffccff, 1);
       renderer.outputEncoding = sRGBEncoding;
       this.renderer = renderer;
       document.querySelector(".boxs").appendChild(renderer.domElement);
@@ -158,7 +161,8 @@ export default {
     // 创建控制器
     setControls() {
       const controls = new OrbitControls(this.camera, this.renderer.domElement);
-      controls.maxPolarAngle = (0.9 * Math.PI) / 2;
+      controls.maxPolarAngle = (0.9 * Math.PI) / 2; // 最大滑动角度
+      console.log(controls.maxPolarAngle, "controls.maxPolarAngle");
       controls.enableZoom = true;
       controls.addEventListener("change", this.changeRender);
       this.controls = controls;
@@ -194,6 +198,7 @@ export default {
       });
     },
     loadModel(url) {
+      const progressbarElem = document.querySelector("#progressbar");
       return new Promise((resolve, reject) => {
         this.loader.load(
           url,
@@ -217,6 +222,7 @@ export default {
           ({ loaded, total }) => {
             let load = Math.abs((loaded / total) * 100);
             this.loadingWidth = load;
+            progressbarElem.style.width = `${load | 0}%`;
             if (load >= 100) {
               setTimeout(() => {
                 this.isLoading = false;
@@ -298,5 +304,32 @@ canvas {
   height: 10px;
   margin: 5px;
   cursor: pointer;
+}
+#progressbar {
+  width: 0%;
+  height: 100%;
+  transition: width ease-out 0.5s;
+  background-color: #888;
+  background-image: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.5) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.5) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 50px 50px;
+  animation: progressanim 2s linear infinite;
+}
+
+@keyframes progressanim {
+  0% {
+    background-position: 50px 50px;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 </style>
