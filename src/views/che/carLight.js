@@ -43,8 +43,8 @@ function openCarLight () {
   lensflare1.visible = true;
   lensflare2.visible = true;
   // 弱光：弱光下，车灯发光对比更明显 调整灯光的强度
-  directionalLight.intensity = 0.0;
-  directionalLight2.intensity = 0.0;
+  // directionalLight.intensity = 0.0;
+  // directionalLight2.intensity = 0.0;
   ambient.intensity = 0.3;
 }
 
@@ -54,8 +54,8 @@ function closeCarLight () {
   lensflare1.visible = false;
   lensflare2.visible = false;
   // 亮光
-  directionalLight.intensity = 0.8;
-  directionalLight2.intensity = 0.8;
+  // directionalLight.intensity = 0.8;
+  // directionalLight2.intensity = 0.8;
   ambient.intensity = 0.9;
 }
 

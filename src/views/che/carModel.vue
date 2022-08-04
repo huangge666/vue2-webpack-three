@@ -1,5 +1,12 @@
 <template>
   <div class="car-model">
+    <div v-if="percentage < 100"
+         class="mask">
+      <el-progress :text-inside="true"
+                   :stroke-width="24"
+                   :percentage="percentage"
+                   status="success" />
+    </div>
     <div class="light"
          @click="lightEvent()">
       {{ light ? `关灯` : `开灯` }}
@@ -46,6 +53,20 @@ export default {
     height: 50px;
     text-align: center;
     line-height: 50px;
+  }
+
+  .mask {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 2;
+  }
+  .el-progress {
+    width: 50%;
+    margin: 300px auto;
   }
 }
 </style>
