@@ -18,11 +18,13 @@
 import { renderer } from "./RendererCamera";
 // 车灯
 import { openCarLight, closeCarLight } from "./carLight.js";
+import eventBus from "@/tools/eventBus.js";
 export default {
   name: "Car",
   data() {
     return {
       light: false, // 灯
+      percentage: 0,
     };
   },
   methods: {
@@ -32,8 +34,15 @@ export default {
     },
   },
   mounted() {
+    eventBus.$on("on-percentage", (val) => {
+      this.percentage = val;
+    });
+
     // Three.js渲染结果Canvas画布插入到body元素中
     this.$el.appendChild(renderer.domElement);
+  },
+  beforeDestroy() {
+    eventBus.$off("on-percentage");
   },
 };
 </script>

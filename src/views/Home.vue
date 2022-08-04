@@ -9,7 +9,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Animations from "@/assets/utils/animations";
-import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+import { TWEEN } from "three/examples/jsm/libs/tween.module.min.js";
 
 export default {
   name: "Home",
@@ -36,7 +36,7 @@ export default {
 
       const gltfLoader = new GLTFLoader();
       gltfLoader.load(
-        "/gltf/scene.gltf",
+        "./gltf/scene.gltf",
         (gltf) => {
           var model = gltf.scene;
 
@@ -157,7 +157,7 @@ export default {
           Animations.animateCamera(
             camera,
             controls,
-            { x: 2, y: .5, z: 2 },
+            { x: 2, y: 0.5, z: 2 },
             { x: 0, y: 0, z: 0 },
             1600,
             () => {}

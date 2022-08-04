@@ -10,6 +10,8 @@ import { CreateCarTag } from "./PointsTag.js";
 import { open } from "./open";
 // 加载轿车前灯发光模拟
 import { lensflare1, lensflare2 } from "./carLight";
+// 事件总线
+import eventBus from "../../tools/eventBus";
 
 //声明一个组对象，用来添加加载成功的三维场景
 const model = new THREE.Group();
@@ -48,6 +50,7 @@ loader.load("./static/model/轿车.glb", (gltf) => {
 }, (xhr) => {
   // console.log(xhr.loaded, xhr.total);
   percentage = +((xhr.loaded / xhr.total) * 100).toFixed(0);
+  eventBus.$emit("on-percentage", percentage);
 }, (err) => {
   console.log({ err });
 })
